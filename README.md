@@ -122,6 +122,38 @@ sonar.exclusions=**/*_test.py,**/test_*.py,venv/**
 
 ## Troubleshooting
 
+### Elasticsearch Memory Issues
+
+If you encounter the error: `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`
+
+**Solution 1 - Docker Compose (Recommended):**
+The `docker-compose.yml` file already includes the required system configuration:
+```yaml
+sysctls:
+  - vm.max_map_count=262144
+```
+
+**Solution 2 - Host System Configuration:**
+If the Docker approach doesn't work, set it on the host:
+
+```bash
+# Temporary fix (until reboot)
+sudo sysctl -w vm.max_map_count=262144
+
+# Permanent fix
+echo 'vm.max_map_count=262144' | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+
+**For macOS users:**
+The sysctls configuration in Docker Compose should work automatically. If issues persist, try:
+```bash
+# Check current value
+docker run --rm alpine sysctl vm.max_map_count
+
+# Restart Docker Desktop if needed
+```
+
 ### SonarQube Won't Start
 
 -   Check available memory (requires at least 2GB RAM)

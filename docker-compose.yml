@@ -21,6 +21,8 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
+        sysctls:
+            - vm.max_map_count=262144
         restart: unless-stopped
 
     sonarqube-db:
